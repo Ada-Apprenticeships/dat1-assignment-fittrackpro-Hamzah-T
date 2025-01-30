@@ -49,7 +49,6 @@ CREATE TABLE staff(
     ON DELETE SET NULL -- Prevents orphaned records by setting location_id to NULL when location is deleted
 );
 
-
 CREATE TABLE equipment (
     equipment_id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
