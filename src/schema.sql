@@ -155,6 +155,7 @@ CREATE TABLE equipment_maintenance_log (
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE SET NULL
 );
 
+
 -- TODO: Create the following tables:
 -- 1. locations
 -- 2. members
