@@ -28,7 +28,7 @@ CREATE TABLE members(
     member_id INTEGER PRIMARY KEY,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL CHECK (email LIKE '%_.%_@email.com'), -- All member emails should end with ._email.com
+    email TEXT UNIQUE NOT NULL, 
     phone_number TEXT NOT NULL CHECK(phone_number LIKE '555-____'),
     date_of_birth TEXT NOT NULL,
     join_date TEXT NOT NULL CHECK(join_date >= date_of_birth),
