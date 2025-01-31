@@ -22,8 +22,8 @@ WHERE member_id = 5;
 -- 3. Count total number of members
 -- TODO: Write a query to count the total number of members
 
-SELECT COUNT (*) AS total_members
-FROM members
+SELECT COUNT(*) AS total_members
+FROM members;
  
 -- 4. Find member with the most class registrations
 -- TODO: Write a query to find the member with the most class registrations
