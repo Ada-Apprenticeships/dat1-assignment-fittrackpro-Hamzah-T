@@ -11,7 +11,8 @@
 
 SELECT equipment_id, name, next_maintenance_date
 FROM equipment
-WHERE next_maintenance_date BETWEEN date('now') AND date('now', '+30 days');
+WHERE next_maintenance_date BETWEEN date('now') 
+AND date('now', '+30 days');
 
 -- 2. Count equipment types in stock
 -- TODO: Write a query to count equipment types in stock
