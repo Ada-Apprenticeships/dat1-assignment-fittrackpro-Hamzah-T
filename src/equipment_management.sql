@@ -25,6 +25,6 @@ GROUP BY type;
 -- TODO: Write a query to calculate average age of equipment by type (in days)
 
 SELECT type AS equipment_type, 
-       AVG(julianday('now') - julianday(purchase_date)) AS avg_age_days --juliandays used to quantify the number of days between now and purchase date
+       ROUND(AVG(julianday('now') - julianday(purchase_date)),1) AS avg_age_days --juliandays used to quantify the number of days between now and purchase date
 FROM equipment
 GROUP BY type;
