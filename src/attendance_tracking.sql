@@ -15,7 +15,9 @@ VALUES (7, 1, datetime('now'));
 -- 2. Retrieve a member's attendance history
 -- TODO: Write a query to retrieve a member's attendance history
 
-SELECT date(check_in_time) AS visit_date, check_in_time, check_out_time
+SELECT date(check_in_time) AS visit_date, 
+       check_in_time, 
+       check_out_time
 FROM attendance
 WHERE member_id = 5
 ORDER BY check_in_time DESC;

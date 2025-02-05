@@ -9,7 +9,10 @@
 -- 1. List all staff members by role
 -- TODO: Write a query to list all staff members by role
 
-SELECT staff_id, first_name, last_name, position AS role
+SELECT staff_id, 
+       first_name, 
+       last_name, 
+       position AS role
 FROM staff
 ORDER BY position;
 
@@ -22,8 +25,7 @@ SELECT s.staff_id AS trainer_id,
 FROM staff s
 JOIN personal_training_sessions pt 
 ON s.staff_id = pt.staff_id
-WHERE s.position = 'Trainer' 
-AND pt.session_date BETWEEN date('now') AND date('now', '+30 days')
+WHERE s.position = 'Trainer' AND pt.session_date BETWEEN date('now') AND date('now', '+30 days')
 GROUP BY s.staff_id
 HAVING session_count > 0
 ORDER BY session_count DESC;
