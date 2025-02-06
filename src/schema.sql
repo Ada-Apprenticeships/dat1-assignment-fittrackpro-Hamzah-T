@@ -17,33 +17,33 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE locations(
     location_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    address TEXT NOT NULL,
-    phone_number TEXT NOT NULL CHECK(phone_number LIKE '555-____'), -- All Numbers should start with 555- and follow with 4 digits
-    email TEXT UNIQUE NOT NULL CHECK(email LIKE '%_@fittrackpro.com'), -- All Location emails should end with @fittrackpro.com 
-    opening_hours TEXT NOT NULL
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    phone_number CHAR(8) NOT NULL CHECK(phone_number LIKE '555-____'), -- All Numbers should start with 555- and follow with 4 digits
+    email VARCHAR(255) UNIQUE NOT NULL CHECK(email LIKE '%_@fittrackpro.com'), -- All Location emails should end with @fittrackpro.com 
+    opening_hours VARCHAR(12) NOT NULL
 );
 
 CREATE TABLE members(
     member_id INTEGER PRIMARY KEY,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL CHECK (email LIKE '%_@email.com'), -- Check all member emails end in @email.com 
-    phone_number TEXT NOT NULL CHECK(phone_number LIKE '555-____'),
-    date_of_birth TEXT NOT NULL,
-    join_date TEXT NOT NULL CHECK(join_date >= date_of_birth),
-    emergency_contact_name TEXT NOT NULL,
-    emergency_contact_phone TEXT NOT NULL CHECK(emergency_contact_phone LIKE '555-____')
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL CHECK (email LIKE '%_@email.com'), -- Check all member emails end in @email.com 
+    phone_number CHAR(8) NOT NULL CHECK(phone_number LIKE '555-____'),
+    date_of_birth DATE NOT NULL,
+    join_date DATE NOT NULL CHECK(join_date >= date_of_birth),
+    emergency_contact_name VARCHAR(255) NOT NULL,
+    emergency_contact_phone CHAR(8) NOT NULL CHECK(emergency_contact_phone LIKE '555-____')
 );
 
 CREATE TABLE staff(
     staff_id INTEGER PRIMARY KEY,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL CHECK (email LIKE '%_._@fittrackpro.com'),--All staff emails should end with ._fittrackpro.com
-    phone_number TEXT NOT NULL CHECK(phone_number LIKE '555-____'),
-    position TEXT NOT NULL CHECK(position IN ('Trainer', 'Manager', 'Receptionist', 'Maintenance')),
-    hire_date TEXT NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL CHECK (email LIKE '%_._@fittrackpro.com'),--All staff emails should end with ._fittrackpro.com
+    phone_number CHAR(8) NOT NULL CHECK(phone_number LIKE '555-____'),
+    position VARCHAR(12) NOT NULL CHECK(position IN ('Trainer', 'Manager', 'Receptionist', 'Maintenance')),
+    hire_date DATE NOT NULL,
     location_id INTEGER,
     FOREIGN KEY (location_id) REFERENCES locations(location_id) ON UPDATE CASCADE --Ensures location_id changes update all dependent records accordingly
     ON DELETE SET NULL -- Prevents orphaned records by setting location_id to NULL when location is deleted
@@ -51,19 +51,19 @@ CREATE TABLE staff(
 
 CREATE TABLE equipment (
     equipment_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    type TEXT NOT NULL CHECK(type IN ('Cardio', 'Strength')),
-    purchase_date TEXT NOT NULL,
-    last_maintenance_date TEXT NOT NULL CHECK(last_maintenance_date >= purchase_date), -- Last Maintenance should not be before purchase
-    next_maintenance_date TEXT NOT NULL CHECK(next_maintenance_date >= last_maintenance_date), -- Next maintenance should be afetr the last maintenance date
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(8) NOT NULL CHECK(type IN ('Cardio', 'Strength')),
+    purchase_date DATE NOT NULL,
+    last_maintenance_date DATE NOT NULL CHECK(last_maintenance_date >= purchase_date), -- Last Maintenance should not be before purchase
+    next_maintenance_date DATE NOT NULL CHECK(next_maintenance_date >= last_maintenance_date), -- Next maintenance should be afetr the last maintenance date
     location_id INTEGER,
     FOREIGN KEY (location_id) REFERENCES locations(location_id) ON DELETE CASCADE 
 );
 
 CREATE TABLE classes (
     class_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
     capacity INTEGER NOT NULL, 
     duration INTEGER NOT NULL, 
     location_id INTEGER,
@@ -74,8 +74,8 @@ CREATE TABLE class_schedule (
     schedule_id INTEGER PRIMARY KEY,
     class_id INTEGER,
     staff_id INTEGER,
-    start_time TEXT NOT NULL,
-    end_time TEXT NOT NULL CHECK(end_time > start_time), -- End time of class should be after start time
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL CHECK(end_time > start_time), -- End time of class should be after start time
     FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE,
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE SET NULL
 );
@@ -83,10 +83,10 @@ CREATE TABLE class_schedule (
 CREATE TABLE memberships (
     membership_id INTEGER PRIMARY KEY,
     member_id INTEGER,
-    type TEXT NOT NULL CHECK(type IN ('Premium', 'Basic')),
-    start_date TEXT NOT NULL, 
-    end_date TEXT NOT NULL CHECK(end_date > start_date), -- Membership end date must be in the future
-    status TEXT NOT NULL CHECK(status IN ('Active', 'Inactive')),
+    type VARCHAR(7) NOT NULL CHECK(type IN ('Premium', 'Basic')),
+    start_date DATE NOT NULL, 
+    end_date DATE NOT NULL CHECK(end_date > start_date), -- Membership end date must be in the future
+    status VARCHAR(8) NOT NULL CHECK(status IN ('Active', 'Inactive')),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 );
 
@@ -94,8 +94,8 @@ CREATE TABLE attendance (
     attendance_id INTEGER PRIMARY KEY,
     member_id INTEGER,
     location_id INTEGER,
-    check_in_time TEXT NOT NULL,
-    check_out_time TEXT CHECK(check_out_time > check_in_time), -- Check out time should be after check in time
+    check_in_time DATETIME NOT NULL,
+    check_out_time DATETIME CHECK(check_out_time > check_in_time), -- Check out time should be after check in time
     FOREIGN KEY (member_id) REFERENCES members(member_id) 
     ON DELETE CASCADE,
     FOREIGN KEY (location_id) REFERENCES locations(location_id) 
@@ -106,7 +106,7 @@ CREATE TABLE class_attendance (
     class_attendance_id INTEGER PRIMARY KEY,
     schedule_id INTEGER,
     member_id INTEGER,
-    attendance_status TEXT NOT NULL CHECK(attendance_status IN ('Registered', 'Attended', 'Unattended')),
+    attendance_status VARCHAR(10) NOT NULL CHECK(attendance_status IN ('Registered', 'Attended', 'Unattended')),
     FOREIGN KEY (schedule_id) REFERENCES class_schedule(schedule_id) ON DELETE CASCADE,
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 );
@@ -115,9 +115,9 @@ CREATE TABLE payments (
     payment_id INTEGER PRIMARY KEY,
     member_id INTEGER,
     amount REAL NOT NULL CHECK(amount > 0), -- Payment should be positive
-    payment_date TEXT NOT NULL,
-    payment_method TEXT NOT NULL CHECK(payment_method IN ('Credit Card', 'Bank Transfer', 'PayPal', 'Cash')),
-    payment_type TEXT NOT NULL CHECK(payment_type IN ('Monthly membership fee', 'Day pass')),
+    payment_date DATETIME NOT NULL,
+    payment_method VARCHAR(13) NOT NULL CHECK(payment_method IN ('Credit Card', 'Bank Transfer', 'PayPal', 'Cash')),
+    payment_type VARCHAR(22) NOT NULL CHECK(payment_type IN ('Monthly membership fee', 'Day pass')),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE SET NULL
 );
 
@@ -125,10 +125,10 @@ CREATE TABLE personal_training_sessions (
     session_id INTEGER PRIMARY KEY,
     member_id INTEGER,
     staff_id INTEGER,
-    session_date TEXT NOT NULL, 
-    start_time TEXT NOT NULL,
-    end_time TEXT NOT NULL CHECK(end_time > start_time), -- end time should be after start time
-    notes TEXT,
+    session_date DATE NOT NULL, 
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL CHECK(end_time > start_time), -- end time should be after start time
+    notes VARCHAR(255),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE,
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE SET NULL
 );
@@ -136,7 +136,7 @@ CREATE TABLE personal_training_sessions (
 CREATE TABLE member_health_metrics (
     metric_id INTEGER PRIMARY KEY,
     member_id INTEGER,
-    measurement_date TEXT NOT NULL, 
+    measurement_date DATE NOT NULL, 
     weight REAL NOT NULL,
     body_fat_percentage REAL,
     muscle_mass REAL, 
@@ -147,8 +147,8 @@ CREATE TABLE member_health_metrics (
 CREATE TABLE equipment_maintenance_log (
     log_id INTEGER PRIMARY KEY,
     equipment_id INTEGER,
-    maintenance_date TEXT NOT NULL,
-    description TEXT NOT NULL,
+    maintenance_date DATE NOT NULL,
+    description VARCHAR(255) NOT NULL,
     staff_id INTEGER,
     FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id) ON DELETE CASCADE,
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE SET NULL
