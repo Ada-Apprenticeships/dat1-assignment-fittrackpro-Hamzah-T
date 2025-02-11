@@ -1,0 +1,46 @@
+name: Code Quality Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format-check:
+    name: Check Code Formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: |
+          npm install --global prettier eslint sql-formatter-cli
+          python -m pip install --upgrade black sqlfluff
+
+      - name: Check Formatting (Prettier)
+        run: prettier --check "**/*.{js,ts,jsx,tsx,json,md,yml,yaml}"
+
+      - name: Run Linter (ESLint)
+        run: eslint . --ext .js,.ts,.tsx,.jsx
+
+      - name: Check Python Formatting (Black)
+        run: black --check .
+
+      - name: Lint and Fix SQL (SQLFluff for SQLite)
+        run: |
+          sqlfluff fix --dialect sqlite **/*.sql || echo "SQLFluff found issues"
+
+      - name: Format SQL (sql-formatter)
+        run: sql-formatter --fix "**/*.sql"
