@@ -86,7 +86,7 @@ CREATE TABLE memberships (
     type VARCHAR(7) NOT NULL CHECK(type IN ('Premium', 'Basic')),
     start_date DATE NOT NULL, 
     end_date DATE NOT NULL CHECK(end_date > start_date), -- Membership end date must be in the future
-    status VARCHAR(8) NOT NULL CHECK(status IN ('Active', 'Inactive')),
+    status VARCHAR(8) NOT NULL DEFAULT 'Active' CHECK(status IN ('Active', 'Inactive')), -- Set default value as active for new memberships which are added
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 );
 
@@ -106,7 +106,7 @@ CREATE TABLE class_attendance (
     class_attendance_id INTEGER PRIMARY KEY,
     schedule_id INTEGER,
     member_id INTEGER,
-    attendance_status VARCHAR(10) NOT NULL CHECK(attendance_status IN ('Registered', 'Attended', 'Unattended')),
+    attendance_status VARCHAR(10) NOT NULL DEFAULT 'Registered' CHECK(attendance_status IN ('Registered', 'Attended', 'Unattended')), -- Default value should be registered where no value is assigned
     FOREIGN KEY (schedule_id) REFERENCES class_schedule(schedule_id) ON DELETE CASCADE,
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 );
@@ -115,7 +115,7 @@ CREATE TABLE payments (
     payment_id INTEGER PRIMARY KEY,
     member_id INTEGER,
     amount REAL NOT NULL CHECK(amount > 0), -- Payment should be positive
-    payment_date DATETIME NOT NULL,
+    payment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- For any new payments with no date or time specified, the current date and time is the default value
     payment_method VARCHAR(13) NOT NULL CHECK(payment_method IN ('Credit Card', 'Bank Transfer', 'PayPal', 'Cash')),
     payment_type VARCHAR(22) NOT NULL CHECK(payment_type IN ('Monthly membership fee', 'Day pass')),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE SET NULL
@@ -128,7 +128,7 @@ CREATE TABLE personal_training_sessions (
     session_date DATE NOT NULL, 
     start_time TIME NOT NULL,
     end_time TIME NOT NULL CHECK(end_time > start_time), -- end time should be after start time
-    notes VARCHAR(255),
+    notes VARCHAR(255) DEFAULT NULL, --Default shoudl be null for any sessions which have no notes rather than empty
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE,
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE SET NULL
 );
