@@ -21,7 +21,7 @@ CREATE TABLE locations(
     address VARCHAR(255) NOT NULL,
     phone_number CHAR(8) NOT NULL CHECK(phone_number LIKE '555-____'), -- All Numbers should start with 555- and follow with 4 digits
     email VARCHAR(255) UNIQUE NOT NULL CHECK(email LIKE '%_@fittrackpro.com'), -- All Location emails should end with @fittrackpro.com 
-    opening_hours VARCHAR(12) NOT NULL
+    opening_hours VARCHAR(12) NOT NULL --Format is h:mm-hh:mm so 12 accounts for this plus an extra character at the start
 );
 
 CREATE TABLE members(
@@ -42,7 +42,7 @@ CREATE TABLE staff(
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL CHECK (email LIKE '%_._@fittrackpro.com'),--All staff emails should end with ._fittrackpro.com
     phone_number CHAR(8) NOT NULL CHECK(phone_number LIKE '555-____'),
-    position VARCHAR(12) NOT NULL CHECK(position IN ('Trainer', 'Manager', 'Receptionist', 'Maintenance')),
+    position VARCHAR(12) NOT NULL CHECK(position IN ('Trainer', 'Manager', 'Receptionist', 'Maintenance')),-- Maximum length possible is 12
     hire_date DATE NOT NULL,
     location_id INTEGER,
     FOREIGN KEY (location_id) REFERENCES locations(location_id) ON UPDATE CASCADE --Ensures location_id changes update all dependent records accordingly
@@ -52,7 +52,7 @@ CREATE TABLE staff(
 CREATE TABLE equipment (
     equipment_id INTEGER PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    type VARCHAR(8) NOT NULL CHECK(type IN ('Cardio', 'Strength')),
+    type VARCHAR(8) NOT NULL CHECK(type IN ('Cardio', 'Strength')),--Maximum length it can be is 8
     purchase_date DATE NOT NULL,
     last_maintenance_date DATE NOT NULL CHECK(last_maintenance_date >= purchase_date), -- Last Maintenance should not be before purchase
     next_maintenance_date DATE NOT NULL CHECK(next_maintenance_date >= last_maintenance_date), -- Next maintenance should be afetr the last maintenance date
@@ -83,7 +83,7 @@ CREATE TABLE class_schedule (
 CREATE TABLE memberships (
     membership_id INTEGER PRIMARY KEY,
     member_id INTEGER,
-    type VARCHAR(7) NOT NULL CHECK(type IN ('Premium', 'Basic')),
+    type VARCHAR(7) NOT NULL CHECK(type IN ('Premium', 'Basic')),--Maximum length it can be is 7
     start_date DATE NOT NULL, 
     end_date DATE NOT NULL CHECK(end_date > start_date), -- Membership end date must be in the future
     status VARCHAR(8) NOT NULL DEFAULT 'Active' CHECK(status IN ('Active', 'Inactive')), -- Set default value as active for new memberships which are added
