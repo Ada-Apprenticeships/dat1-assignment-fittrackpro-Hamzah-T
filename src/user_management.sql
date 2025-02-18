@@ -51,7 +51,7 @@ SELECT m.member_id,
        m.last_name, 
        COUNT(ca.class_attendance_id) AS registration_count
 FROM members m
-LEFT JOIN class_attendance ca 
+LEFT JOIN class_attendance ca --Left join accounts for members with 0 class registrations
 ON m.member_id = ca.member_id
 GROUP BY m.member_id
 ORDER BY registration_count ASC
