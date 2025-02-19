@@ -39,13 +39,13 @@ HAVING available_spots > 0;  -- Ensures only classes with available spots are sh
 -- TODO: Write a query to register a member for a class
 
 INSERT INTO class_attendance (schedule_id, member_id, attendance_status)
-SELECT cs.schedule_id, 11, 'Registered'
-FROM class_schedule cs
-WHERE cs.class_id = 3 AND date(cs.start_time) = '2025-02-01'
-AND NOT EXISTS (SELECT 1 
-                FROM class_attendance ca 
-                WHERE ca.schedule_id = cs.schedule_id AND ca.member_id = 11) -- Prevent double registration of this member for one class
-LIMIT 1;
+       SELECT cs.schedule_id, 11, 'Registered'
+       FROM class_schedule cs
+       WHERE cs.class_id = 3 AND date(cs.start_time) = '2025-02-01'
+       AND NOT EXISTS (SELECT 1 
+                       FROM class_attendance ca 
+                       WHERE ca.schedule_id = cs.schedule_id AND ca.member_id = 11) -- Prevent double registration of this member for one class
+       LIMIT 1;
 
 -- 4. Cancel a class registration
 -- TODO: Write a query to cancel a class registration

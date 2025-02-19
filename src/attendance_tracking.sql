@@ -10,12 +10,12 @@
 -- TODO: Write a query to record a member's gym visit
 
 INSERT INTO attendance (member_id, location_id, check_in_time)
-VALUES (7, 1, datetime('now'));
+VALUES (7, 1, CURRENT_TIMESTAMP);
 
 -- 2. Retrieve a member's attendance history
 -- TODO: Write a query to retrieve a member's attendance history
 
-SELECT date(check_in_time) AS visit_date, 
+SELECT date(check_in_time) AS visit_date, 2
        check_in_time, 
        check_out_time
 FROM attendance

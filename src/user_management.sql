@@ -37,7 +37,7 @@ SELECT m.member_id,
        m.last_name,
        COUNT(ca.class_attendance_id) AS registration_count
 FROM members m
-LEFT JOIN class_attendance ca 
+JOIN class_attendance ca 
 ON m.member_id = ca.member_id
 GROUP BY m.member_id
 ORDER BY registration_count DESC
