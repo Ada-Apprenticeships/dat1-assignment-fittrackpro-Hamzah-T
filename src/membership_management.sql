@@ -22,7 +22,8 @@ WHERE me.status = 'Active';
 -- TODO: Write a query to calculate the average duration of gym visits for each membership type
 
 SELECT me.type AS membership_type,
-       AVG((julianday(a.check_out_time) - julianday(a.check_in_time)) * 1440) AS avg_visit_duration_minutes --julianday used to convert the duration in days then x1440 to get in minutes
+       ROUND(AVG((julianday(a.check_out_time) - julianday(a.check_in_time)) * 1440),1) AS avg_visit_duration_minutes --julianday used to convert the duration in days then x1440 to get in minutes
+FROM attendance a
 JOIN memberships me ON a.member_id = me.member_id
 WHERE a.check_out_time IS NOT NULL  -- Exclude ongoing visits
 GROUP BY me.type;
